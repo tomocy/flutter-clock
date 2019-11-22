@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -107,5 +108,61 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class CircleWithInnerEdges extends StatelessWidget {
+  CircleWithInnerEdges(
+      {this.radius,
+      this.color,
+      this.center,
+      this.innerRadiusRatio = 1,
+      this.innerEdges = const <Widget>[]});
+
+  final double radius;
+  final Color color;
+  final Widget center;
+  final double innerRadiusRatio;
+  final List<Widget> innerEdges;
+
+  @override
+  Widget build(BuildContext context) {
+    final children = center != null
+        ? <Widget>[
+            Align(
+              child: center,
+            ),
+          ]
+        : <Widget>[];
+    children.addAll(_roundlyPositionedInnerEdges());
+
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      child: Stack(
+        children: children,
+      ),
+    );
+  }
+
+  List<Widget> _roundlyPositionedInnerEdges() {
+    final base = 360 / innerEdges.length;
+    double degree = 0;
+
+    return innerEdges.map((innerEdge) {
+      final radian = degree * pi / 180;
+      final x = radian.abs() != pi / 2 ? innerRadiusRatio * cos(radian) : 0;
+      final y = radian.abs() != pi ? innerRadiusRatio * sin(radian) : 0;
+      degree += base;
+
+      return Align(
+        alignment: Alignment(x, y),
+        child: innerEdge,
+      );
+    }).toList();
   }
 }
