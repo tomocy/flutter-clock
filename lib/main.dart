@@ -37,35 +37,19 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
     super.initState();
     _animationControllers =
         <RotatingAnimationControllerName, AnimationController>{
-      RotatingAnimationControllerName.seconds: _repeatedAnimationController(
+      RotatingAnimationControllerName.seconds: AnimationController(
         vsync: this,
         duration: const Duration(seconds: 60),
-      )..forward(),
-      RotatingAnimationControllerName.minutes: _repeatedAnimationController(
+      )..addListener(() => setState(() {})),
+      RotatingAnimationControllerName.minutes: AnimationController(
         vsync: this,
         duration: const Duration(minutes: 60),
-      )..forward(),
-      RotatingAnimationControllerName.hours: _repeatedAnimationController(
+      )..addListener(() => setState(() {})),
+      RotatingAnimationControllerName.hours: AnimationController(
         vsync: this,
         duration: const Duration(hours: 60),
-      )..forward(),
-    };
-  }
-
-  AnimationController _repeatedAnimationController(
-      {TickerProvider vsync, Duration duration}) {
-    final controller = AnimationController(
-      vsync: this,
-      duration: duration,
-    );
-    controller.addListener(() {
-      setState(() {});
-      if (controller.isCompleted) {
-        controller.repeat();
-      }
-    });
-
-    return controller;
+      )..addListener(() => setState(() {})),
+    }..forEach((_, controller) => controller.repeat());
   }
 
   @override
