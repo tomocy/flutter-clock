@@ -56,23 +56,35 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _buildSecondsClock(context),
+        child: _buildSecondsClock(
+          context,
+          radius: widget.radius,
+          center: _buildMinutesClock(
+            context,
+            radius: widget.radius * 2 / 3,
+            center: _buildHoursClock(
+              context,
+              radius: widget.radius / 3,
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildSecondsClock(BuildContext context) {
+  Widget _buildSecondsClock(BuildContext context,
+      {double radius = 0, Color color = Colors.transparent, Widget center}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.seconds],
       inReverse: widget.inReverse,
       child: CircleWithInnerEdges(
-        radius: widget.radius,
-        color: Colors.transparent,
+        radius: radius,
+        color: color,
         center: _rotatingTransition(
           parent:
               _animationControllers[RotatingAnimationControllerName.seconds],
           inReverse: !widget.inReverse,
-          child: _buildMinutesClock(context),
+          child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
@@ -89,18 +101,19 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildMinutesClock(BuildContext context) {
+  Widget _buildMinutesClock(BuildContext context,
+      {double radius = 0, Color color = Colors.transparent, Widget center}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.minutes],
       inReverse: widget.inReverse,
       child: CircleWithInnerEdges(
-        radius: widget.radius * 2 / 3,
-        color: Colors.transparent,
+        radius: radius,
+        color: color,
         center: _rotatingTransition(
           parent:
               _animationControllers[RotatingAnimationControllerName.minutes],
           inReverse: !widget.inReverse,
-          child: _buildHoursClock(context),
+          child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
@@ -117,13 +130,19 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHoursClock(BuildContext context) {
+  Widget _buildHoursClock(BuildContext context,
+      {double radius = 0, Color color = Colors.transparent, Widget center}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.hours],
       inReverse: widget.inReverse,
       child: CircleWithInnerEdges(
-        radius: widget.radius / 3,
-        color: Colors.transparent,
+        radius: radius,
+        color: color,
+        center: _rotatingTransition(
+          parent: _animationControllers[RotatingAnimationControllerName.hours],
+          inReverse: !widget.inReverse,
+          child: center,
+        ),
         innerEdges:
             List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12)
                 .map((i) => _rotatingTransition(
