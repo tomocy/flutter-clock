@@ -56,17 +56,27 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _buildSecondsClock(
-          context,
-          radius: widget.radius,
-          center: _buildMinutesClock(
-            context,
-            radius: widget.radius * 2 / 3,
-            center: _buildHoursClock(
+        child: Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: <Widget>[
+            _buildSecondsClock(
               context,
-              radius: widget.radius / 3,
+              radius: widget.radius,
+              center: _buildMinutesClock(
+                context,
+                radius: widget.radius * 2 / 3,
+                center: _buildHoursClock(
+                  context,
+                  radius: widget.radius / 3,
+                ),
+              ),
             ),
-          ),
+            Container(
+              width: 2,
+              height: widget.radius,
+              color: Theme.of(context).accentColor,
+            ),
+          ],
         ),
       ),
     );
