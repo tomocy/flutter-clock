@@ -9,7 +9,15 @@ class ClockApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Clock Challenge',
-      theme: ThemeData.light(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        accentColor: Colors.red,
+        textTheme: TextTheme(
+          display1: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ),
       home: ClockPage(
         radius: 300,
         inReverse: true,
