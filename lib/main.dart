@@ -40,16 +40,22 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
       RotatingAnimationControllerName.seconds: AnimationController(
         vsync: this,
         duration: const Duration(seconds: 60),
-      )..addListener(() => setState(() {})),
+      )
+        ..addListener(() => setState(() {}))
+        ..repeat(),
       RotatingAnimationControllerName.minutes: AnimationController(
         vsync: this,
         duration: const Duration(minutes: 60),
-      )..addListener(() => setState(() {})),
+      )
+        ..addListener(() => setState(() {}))
+        ..repeat(),
       RotatingAnimationControllerName.hours: AnimationController(
         vsync: this,
         duration: const Duration(hours: 60),
-      )..addListener(() => setState(() {})),
-    }..forEach((_, controller) => controller.repeat());
+      )
+        ..addListener(() => setState(() {}))
+        ..repeat(),
+    };
   }
 
   @override
