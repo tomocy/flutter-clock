@@ -82,8 +82,11 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
                 center: _buildHoursClock(
                   context,
                   radius: widget.radius / 3,
+                  innerEdgeTextStyle: Theme.of(context).textTheme.display1,
                 ),
+                innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
               ),
+              innerEdgeTextStyle: Theme.of(context).textTheme.caption,
             ),
             Container(
               width: 2,
@@ -97,7 +100,10 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   }
 
   Widget _buildSecondsClock(BuildContext context,
-      {double radius = 0, Color color = Colors.transparent, Widget center}) {
+      {double radius = 0,
+      Color color = Colors.transparent,
+      Widget center,
+      TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.seconds],
       inReverse: widget.inReverse,
@@ -117,7 +123,7 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
                   inReverse: !widget.inReverse,
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
-                    style: Theme.of(context).textTheme.caption,
+                    style: innerEdgeTextStyle,
                   ),
                 ))
             .toList(),
@@ -126,7 +132,10 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   }
 
   Widget _buildMinutesClock(BuildContext context,
-      {double radius = 0, Color color = Colors.transparent, Widget center}) {
+      {double radius = 0,
+      Color color = Colors.transparent,
+      Widget center,
+      TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.minutes],
       inReverse: widget.inReverse,
@@ -146,7 +155,7 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
                   inReverse: !widget.inReverse,
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: innerEdgeTextStyle,
                   ),
                 ))
             .toList(),
@@ -155,7 +164,10 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   }
 
   Widget _buildHoursClock(BuildContext context,
-      {double radius = 0, Color color = Colors.transparent, Widget center}) {
+      {double radius = 0,
+      Color color = Colors.transparent,
+      Widget center,
+      TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.hours],
       inReverse: widget.inReverse,
@@ -175,7 +187,7 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
                       inReverse: !widget.inReverse,
                       child: Text(
                         i % 3 == 0 ? '$i' : '・',
-                        style: Theme.of(context).textTheme.display1,
+                        style: innerEdgeTextStyle,
                       ),
                     ))
                 .toList(),
