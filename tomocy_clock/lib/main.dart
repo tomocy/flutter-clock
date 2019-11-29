@@ -11,7 +11,6 @@ class ClockApp extends StatelessWidget {
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
       home: ClockPage(
-        radius: 300,
         inReverse: true,
       ),
     );
@@ -42,9 +41,8 @@ class ClockThemeData {
 }
 
 class ClockPage extends StatefulWidget {
-  ClockPage({Key key, this.radius, this.inReverse = false}) : super(key: key);
+  ClockPage({Key key, this.inReverse = false}) : super(key: key);
 
-  final double radius;
   final bool inReverse;
 
   @override
@@ -98,6 +96,8 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final radius = MediaQuery.of(context).size.shortestSide * 0.9 / 2;
+
     return Scaffold(
       body: Center(
         child: Stack(
@@ -105,13 +105,13 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
           children: <Widget>[
             _buildSecondsClock(
               context,
-              radius: widget.radius,
+              radius: radius,
               center: _buildMinutesClock(
                 context,
-                radius: widget.radius * 3 / 4,
+                radius: radius * 3 / 4,
                 center: _buildHoursClock(
                   context,
-                  radius: widget.radius / 2,
+                  radius: radius / 2,
                   innerEdgeTextStyle: Theme.of(context).textTheme.display1,
                 ),
                 innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
@@ -120,7 +120,7 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
             ),
             Container(
               width: 2,
-              height: widget.radius,
+              height: radius,
               color: Theme.of(context).accentColor,
             ),
           ],
