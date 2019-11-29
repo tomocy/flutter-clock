@@ -4,12 +4,22 @@ import 'package:flutter/material.dart';
 void main() => runApp(ClockApp());
 
 class ClockApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Clock Challenge',
-      theme: ThemeData(
+      theme: ClockThemeData.light(),
+      darkTheme: ClockThemeData.dark(),
+      home: ClockPage(
+        radius: 300,
+        inReverse: true,
+      ),
+    );
+  }
+}
+
+class ClockThemeData {
+  static ThemeData light() => ThemeData(
         brightness: Brightness.light,
         accentColor: Colors.red,
         textTheme: TextTheme(
@@ -17,13 +27,18 @@ class ClockApp extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-      ),
-      home: ClockPage(
-        radius: 300,
-        inReverse: true,
-      ),
-    );
-  }
+      );
+
+  static ThemeData dark() => ThemeData(
+        brightness: Brightness.dark,
+        canvasColor: Colors.black,
+        accentColor: Colors.red,
+        textTheme: TextTheme(
+          display1: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      );
 }
 
 class ClockPage extends StatefulWidget {
@@ -43,6 +58,12 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    final now = DateTime.now();
+    final ofSeconds = now.second / 60;
+    final ofMinutes = (now.minute + ofSeconds) / 60;
+    final ofHours = (now.hour % 12 + ofMinutes) / 12;
+
     _animationControllers =
         <RotatingAnimationControllerName, AnimationController>{
       RotatingAnimationControllerName.seconds: AnimationController(
@@ -50,18 +71,27 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
         duration: const Duration(seconds: 60),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofSeconds,
+        )
         ..repeat(),
       RotatingAnimationControllerName.minutes: AnimationController(
         vsync: this,
         duration: const Duration(minutes: 60),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofMinutes,
+        )
         ..repeat(),
       RotatingAnimationControllerName.hours: AnimationController(
         vsync: this,
-        duration: const Duration(hours: 60),
+        duration: const Duration(hours: 12),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofHours,
+        )
         ..repeat(),
     };
   }
@@ -78,10 +108,10 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
               radius: widget.radius,
               center: _buildMinutesClock(
                 context,
-                radius: widget.radius * 2 / 3,
+                radius: widget.radius * 3 / 4,
                 center: _buildHoursClock(
                   context,
-                  radius: widget.radius / 3,
+                  radius: widget.radius / 2,
                   innerEdgeTextStyle: Theme.of(context).textTheme.display1,
                 ),
                 innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
@@ -179,18 +209,17 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
           inReverse: !widget.inReverse,
           child: center,
         ),
-        innerEdges:
-            List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12)
-                .map((i) => _rotatingTransition(
-                      parent: _animationControllers[
-                          RotatingAnimationControllerName.hours],
-                      inReverse: !widget.inReverse,
-                      child: Text(
-                        i % 3 == 0 ? '$i' : '・',
-                        style: innerEdgeTextStyle,
-                      ),
-                    ))
-                .toList(),
+        innerEdges: List<int>.generate(12, (i) => (i + 3) % 12)
+            .map((i) => _rotatingTransition(
+                  parent: _animationControllers[
+                      RotatingAnimationControllerName.hours],
+                  inReverse: !widget.inReverse,
+                  child: Text(
+                    i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                    style: innerEdgeTextStyle,
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
