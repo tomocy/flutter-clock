@@ -4,12 +4,22 @@ import 'package:flutter/material.dart';
 void main() => runApp(ClockApp());
 
 class ClockApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Clock Challenge',
-      theme: ThemeData(
+      theme: ClockThemeData.light(),
+      darkTheme: ClockThemeData.dark(),
+      home: ClockPage(
+        radius: 300,
+        inReverse: true,
+      ),
+    );
+  }
+}
+
+class ClockThemeData {
+  static ThemeData light() => ThemeData(
         brightness: Brightness.light,
         accentColor: Colors.red,
         textTheme: TextTheme(
@@ -17,13 +27,18 @@ class ClockApp extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-      ),
-      home: ClockPage(
-        radius: 300,
-        inReverse: true,
-      ),
-    );
-  }
+      );
+
+  static ThemeData dark() => ThemeData(
+        brightness: Brightness.dark,
+        canvasColor: Colors.black,
+        accentColor: Colors.red,
+        textTheme: TextTheme(
+          display1: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      );
 }
 
 class ClockPage extends StatefulWidget {
