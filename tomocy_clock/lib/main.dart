@@ -10,9 +10,7 @@ class ClockApp extends StatelessWidget {
       title: 'Flutter Clock Challenge',
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
-      home: ClockPage(
-        inReverse: true,
-      ),
+      home: ClockPage(),
     );
   }
 }
@@ -41,9 +39,7 @@ class ClockThemeData {
 }
 
 class ClockPage extends StatefulWidget {
-  ClockPage({Key key, this.inReverse = false}) : super(key: key);
-
-  final bool inReverse;
+  ClockPage({Key key}) : super(key: key);
 
   @override
   _ClockPageState createState() => _ClockPageState();
@@ -136,21 +132,19 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
       TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.seconds],
-      inReverse: widget.inReverse,
+      inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
           parent:
               _animationControllers[RotatingAnimationControllerName.seconds],
-          inReverse: !widget.inReverse,
           child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
                   parent: _animationControllers[
                       RotatingAnimationControllerName.seconds],
-                  inReverse: !widget.inReverse,
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
                     style: innerEdgeTextStyle,
@@ -168,21 +162,19 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
       TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.minutes],
-      inReverse: widget.inReverse,
+      inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
           parent:
               _animationControllers[RotatingAnimationControllerName.minutes],
-          inReverse: !widget.inReverse,
           child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
                   parent: _animationControllers[
                       RotatingAnimationControllerName.minutes],
-                  inReverse: !widget.inReverse,
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
                     style: innerEdgeTextStyle,
@@ -200,20 +192,18 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
       TextStyle innerEdgeTextStyle}) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.hours],
-      inReverse: widget.inReverse,
+      inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
           parent: _animationControllers[RotatingAnimationControllerName.hours],
-          inReverse: !widget.inReverse,
           child: center,
         ),
         innerEdges: List<int>.generate(12, (i) => (i + 3) % 12)
             .map((i) => _rotatingTransition(
                   parent: _animationControllers[
                       RotatingAnimationControllerName.hours],
-                  inReverse: !widget.inReverse,
                   child: Text(
                     i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
                     style: innerEdgeTextStyle,
