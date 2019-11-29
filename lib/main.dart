@@ -108,10 +108,10 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
               radius: widget.radius,
               center: _buildMinutesClock(
                 context,
-                radius: widget.radius * 2 / 3,
+                radius: widget.radius * 3 / 4,
                 center: _buildHoursClock(
                   context,
-                  radius: widget.radius / 3,
+                  radius: widget.radius / 2,
                   innerEdgeTextStyle: Theme.of(context).textTheme.display1,
                 ),
                 innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
@@ -209,18 +209,17 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
           inReverse: !widget.inReverse,
           child: center,
         ),
-        innerEdges:
-            List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12)
-                .map((i) => _rotatingTransition(
-                      parent: _animationControllers[
-                          RotatingAnimationControllerName.hours],
-                      inReverse: !widget.inReverse,
-                      child: Text(
-                        i % 3 == 0 ? '$i' : '・',
-                        style: innerEdgeTextStyle,
-                      ),
-                    ))
-                .toList(),
+        innerEdges: List<int>.generate(12, (i) => (i + 3) % 12)
+            .map((i) => _rotatingTransition(
+                  parent: _animationControllers[
+                      RotatingAnimationControllerName.hours],
+                  inReverse: !widget.inReverse,
+                  child: Text(
+                    i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                    style: innerEdgeTextStyle,
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
