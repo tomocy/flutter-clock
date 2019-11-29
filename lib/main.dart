@@ -43,6 +43,12 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    final now = DateTime.now();
+    final ofSeconds = now.second / 60;
+    final ofMinutes = (now.minute + ofSeconds) / 60;
+    final ofHours = (now.hour % 12 + ofMinutes) / 12;
+
     _animationControllers =
         <RotatingAnimationControllerName, AnimationController>{
       RotatingAnimationControllerName.seconds: AnimationController(
@@ -50,18 +56,27 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
         duration: const Duration(seconds: 60),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofSeconds,
+        )
         ..repeat(),
       RotatingAnimationControllerName.minutes: AnimationController(
         vsync: this,
         duration: const Duration(minutes: 60),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofMinutes,
+        )
         ..repeat(),
       RotatingAnimationControllerName.hours: AnimationController(
         vsync: this,
-        duration: const Duration(hours: 60),
+        duration: const Duration(hours: 12),
       )
         ..addListener(() => setState(() {}))
+        ..forward(
+          from: ofHours,
+        )
         ..repeat(),
     };
   }
