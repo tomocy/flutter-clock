@@ -289,8 +289,8 @@ class CircleWithInnerEdges extends StatelessWidget {
 
     return innerEdges.map((innerEdge) {
       final radian = degree * pi / 180;
-      final x = radian.abs() != pi / 2 ? innerRadiusRatio * cos(radian) : 0;
-      final y = radian.abs() != pi ? innerRadiusRatio * sin(radian) : 0;
+      final x = radian.abs() != pi / 2 ? innerRadiusRatio * cos(radian) : 0.0;
+      final y = radian.abs() != pi ? innerRadiusRatio * sin(radian) : 0.0;
       degree += base;
 
       return Align(
