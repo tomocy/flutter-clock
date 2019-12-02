@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/model.dart';
 
 class ClockApp extends StatelessWidget {
   @override
@@ -9,6 +10,29 @@ class ClockApp extends StatelessWidget {
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
       home: Clock(),
+    );
+  }
+}
+
+class ClockWithModel extends StatefulWidget {
+  ClockWithModel(this._model, {Key key}) : super(key: key);
+
+  final ClockModel _model;
+
+  @override
+  _ClockWithModelState createState() => _ClockWithModelState();
+}
+
+class _ClockWithModelState extends State<ClockWithModel> {
+  @override
+  Widget build(BuildContext context) {
+    print(widget._model.weatherString);
+
+    return Theme(
+      data: Theme.of(context).brightness == Brightness.light
+          ? ClockThemeData.light()
+          : ClockThemeData.dark(),
+      child: Clock(),
     );
   }
 }
