@@ -44,7 +44,7 @@ class ClockPage extends StatefulWidget {
 }
 
 class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
-  DateTime _now = DateTime.now();
+  DateTime _dateTime = DateTime.now();
   Map<RotatingAnimationControllerName, AnimationController>
       _animationControllers;
 
@@ -57,9 +57,9 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
 
   void _updateAnimationControllers() {
     setState(() {
-      final ofSeconds = _now.second / 60;
-      final ofMinutes = (_now.minute + ofSeconds) / 60;
-      final ofHours = (_now.hour % 12 + ofMinutes) / 12;
+      final ofSeconds = _dateTime.second / 60;
+      final ofMinutes = (_dateTime.minute + ofSeconds) / 60;
+      final ofHours = (_dateTime.hour % 12 + ofMinutes) / 12;
 
       _animationControllers =
           <RotatingAnimationControllerName, AnimationController>{
