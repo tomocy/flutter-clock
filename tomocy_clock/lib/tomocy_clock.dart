@@ -32,7 +32,9 @@ class _ClockWithModelState extends State<ClockWithModel> {
       data: Theme.of(context).brightness == Brightness.light
           ? ClockThemeData.light()
           : ClockThemeData.dark(),
-      child: Clock(),
+      child: Clock(
+        is24Format: widget._model.is24HourFormat,
+      ),
     );
   }
 }
@@ -61,7 +63,9 @@ class ClockThemeData {
 }
 
 class Clock extends StatefulWidget {
-  Clock({Key key}) : super(key: key);
+  Clock({Key key, this.is24Format}) : super(key: key);
+
+  final bool is24Format;
 
   @override
   _ClockState createState() => _ClockState();
@@ -79,11 +83,22 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     _updateAnimationControllers();
   }
 
+  @override
+  void didUpdateWidget(Clock old) {
+    super.didUpdateWidget(old);
+
+    if (widget.is24Format != old.is24Format) {
+      _updateAnimationControllers();
+    }
+  }
+
   void _updateAnimationControllers() {
     setState(() {
       final ofSeconds = _dateTime.second / 60;
       final ofMinutes = (_dateTime.minute + ofSeconds) / 60;
-      final ofHours = (_dateTime.hour % 12 + ofMinutes) / 12;
+      final ofHours = widget.is24Format
+          ? (_dateTime.hour + ofMinutes) / 24
+          : (_dateTime.hour % 12 + ofMinutes) / 12;
 
       _animationControllers =
           <RotatingAnimationControllerName, AnimationController>{
@@ -105,7 +120,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ..repeat(),
         RotatingAnimationControllerName.hours: AnimationController(
           vsync: this,
-          duration: const Duration(hours: 12),
+          duration: widget.is24Format
+              ? const Duration(hours: 24)
+              : Duration(hours: 12),
         )
           ..forward(
             from: ofHours,
@@ -226,23 +243,34 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       parent: _animationControllers[RotatingAnimationControllerName.hours],
       inReverse: true,
       child: CircleWithInnerEdges(
-        radius: radius,
-        color: color,
-        center: _rotatingTransition(
-          parent: _animationControllers[RotatingAnimationControllerName.hours],
-          child: center,
-        ),
-        innerEdges: List<int>.generate(12, (i) => (i + 3) % 12)
-            .map((i) => _rotatingTransition(
-                  parent: _animationControllers[
-                      RotatingAnimationControllerName.hours],
-                  child: Text(
-                    i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
-                    style: innerEdgeTextStyle,
-                  ),
-                ))
-            .toList(),
-      ),
+          radius: radius,
+          color: color,
+          center: _rotatingTransition(
+            parent:
+                _animationControllers[RotatingAnimationControllerName.hours],
+            child: center,
+          ),
+          innerEdges: widget.is24Format
+              ? List<int>.generate(24, (i) => (i + 6) % 24)
+                  .map((i) => _rotatingTransition(
+                        parent: _animationControllers[
+                            RotatingAnimationControllerName.hours],
+                        child: Text(
+                          i % 3 == 0 ? '$i' : '・',
+                          style: innerEdgeTextStyle,
+                        ),
+                      ))
+                  .toList()
+              : List<int>.generate(12, (i) => (i + 3) % 12)
+                  .map((i) => _rotatingTransition(
+                        parent: _animationControllers[
+                            RotatingAnimationControllerName.hours],
+                        child: Text(
+                          i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                          style: innerEdgeTextStyle,
+                        ),
+                      ))
+                  .toList()),
     );
   }
 
