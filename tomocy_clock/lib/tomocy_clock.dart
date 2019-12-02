@@ -68,6 +68,9 @@ class ClockThemeData {
           display1: TextStyle(
             color: Colors.black,
           ),
+          headline: TextStyle(
+            color: Colors.black,
+          ),
         ),
       );
 
@@ -77,6 +80,9 @@ class ClockThemeData {
         accentColor: Colors.red,
         textTheme: TextTheme(
           display1: TextStyle(
+            color: Colors.white,
+          ),
+          headline: TextStyle(
             color: Colors.white,
           ),
         ),
@@ -178,7 +184,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 center: _buildHoursClock(
                   context,
                   radius: radius / 2,
-                  innerEdgeTextStyle: Theme.of(context).textTheme.display1,
+                  innerEdgeTextStyle: 250 <= radius
+                      ? Theme.of(context).textTheme.display1
+                      : Theme.of(context).textTheme.headline,
                 ),
                 innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
               ),
