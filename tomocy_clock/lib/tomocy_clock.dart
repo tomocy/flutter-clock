@@ -75,7 +75,6 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
           vsync: this,
           duration: const Duration(minutes: 60),
         )
-          // ..addListener(() => setState(() {}))
           ..forward(
             from: ofMinutes,
           )
@@ -84,7 +83,6 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
           vsync: this,
           duration: const Duration(hours: 12),
         )
-          // ..addListener(() => setState(() {}))
           ..forward(
             from: ofHours,
           )
