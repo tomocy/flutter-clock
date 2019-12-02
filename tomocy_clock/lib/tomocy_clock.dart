@@ -94,6 +94,13 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    _animationControllers.forEach((_, controller) => controller.dispose());
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final radius = MediaQuery.of(context).size.shortestSide * 0.9 / 2;
 
