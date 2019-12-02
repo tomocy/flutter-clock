@@ -8,7 +8,7 @@ class ClockApp extends StatelessWidget {
       title: 'Flutter Clock Challenge',
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
-      home: ClockPage(),
+      home: Clock(),
     );
   }
 }
@@ -36,14 +36,14 @@ class ClockThemeData {
       );
 }
 
-class ClockPage extends StatefulWidget {
-  ClockPage({Key key}) : super(key: key);
+class Clock extends StatefulWidget {
+  Clock({Key key}) : super(key: key);
 
   @override
-  _ClockPageState createState() => _ClockPageState();
+  _ClockState createState() => _ClockState();
 }
 
-class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
+class _ClockState extends State<Clock> with TickerProviderStateMixin {
   DateTime _dateTime = DateTime.now();
   Map<RotatingAnimationControllerName, AnimationController>
       _animationControllers;
