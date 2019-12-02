@@ -46,6 +46,7 @@ class ClockPage extends StatefulWidget {
 }
 
 class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
+  DateTime _now = DateTime.now();
   Map<RotatingAnimationControllerName, AnimationController>
       _animationControllers;
 
@@ -53,41 +54,45 @@ class _ClockPageState extends State<ClockPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    final now = DateTime.now();
-    final ofSeconds = now.second / 60;
-    final ofMinutes = (now.minute + ofSeconds) / 60;
-    final ofHours = (now.hour % 12 + ofMinutes) / 12;
+    _updateAnimationControllers();
+  }
 
-    _animationControllers =
-        <RotatingAnimationControllerName, AnimationController>{
-      RotatingAnimationControllerName.seconds: AnimationController(
-        vsync: this,
-        duration: const Duration(seconds: 60),
-      )
-        ..addListener(() => setState(() {}))
-        ..forward(
-          from: ofSeconds,
+  void _updateAnimationControllers() {
+    setState(() {
+      final ofSeconds = _now.second / 60;
+      final ofMinutes = (_now.minute + ofSeconds) / 60;
+      final ofHours = (_now.hour % 12 + ofMinutes) / 12;
+
+      _animationControllers =
+          <RotatingAnimationControllerName, AnimationController>{
+        RotatingAnimationControllerName.seconds: AnimationController(
+          vsync: this,
+          duration: const Duration(seconds: 60),
         )
-        ..repeat(),
-      RotatingAnimationControllerName.minutes: AnimationController(
-        vsync: this,
-        duration: const Duration(minutes: 60),
-      )
-        ..addListener(() => setState(() {}))
-        ..forward(
-          from: ofMinutes,
+          ..forward(
+            from: ofSeconds,
+          )
+          ..repeat(),
+        RotatingAnimationControllerName.minutes: AnimationController(
+          vsync: this,
+          duration: const Duration(minutes: 60),
         )
-        ..repeat(),
-      RotatingAnimationControllerName.hours: AnimationController(
-        vsync: this,
-        duration: const Duration(hours: 12),
-      )
-        ..addListener(() => setState(() {}))
-        ..forward(
-          from: ofHours,
+          // ..addListener(() => setState(() {}))
+          ..forward(
+            from: ofMinutes,
+          )
+          ..repeat(),
+        RotatingAnimationControllerName.hours: AnimationController(
+          vsync: this,
+          duration: const Duration(hours: 12),
         )
-        ..repeat(),
-    };
+          // ..addListener(() => setState(() {}))
+          ..forward(
+            from: ofHours,
+          )
+          ..repeat(),
+      };
+    });
   }
 
   @override
