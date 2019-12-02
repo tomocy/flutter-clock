@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_clock_helper/model.dart';
 
 class ClockApp extends StatelessWidget {
@@ -25,6 +26,16 @@ class ClockWithModel extends StatefulWidget {
 
 class _ClockWithModelState extends State<ClockWithModel> {
   @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).brightness == Brightness.light
@@ -34,6 +45,18 @@ class _ClockWithModelState extends State<ClockWithModel> {
         is24Format: widget._model.is24HourFormat,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    super.dispose();
   }
 }
 
