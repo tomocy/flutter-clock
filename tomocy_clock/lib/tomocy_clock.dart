@@ -26,8 +26,6 @@ class ClockWithModel extends StatefulWidget {
 class _ClockWithModelState extends State<ClockWithModel> {
   @override
   Widget build(BuildContext context) {
-    print(widget._model.weatherString);
-
     return Theme(
       data: Theme.of(context).brightness == Brightness.light
           ? ClockThemeData.light()
