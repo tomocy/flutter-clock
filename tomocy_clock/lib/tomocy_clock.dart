@@ -7,7 +7,7 @@ class ClockApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Clock Challenge',
+      title: 'tomocy clock',
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
       home: Clock(),
