@@ -294,10 +294,16 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                   .map((i) => _rotatingTransition(
                         parent: _animationControllers[
                             RotatingAnimationControllerName.hours],
-                        child: Text(
-                          i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
-                          style: innerEdgeTextStyle,
-                        ),
+                        child: _dateTime.month == DateTime.april &&
+                                _dateTime.day == 1
+                            ? _buildInnerEdgeOfForAprilFool(
+                                i,
+                                style: innerEdgeTextStyle,
+                              )
+                            : Text(
+                                i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                                style: innerEdgeTextStyle,
+                              ),
                       ))
                   .toList()),
     );
@@ -319,6 +325,41 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       turns: tween.animate(parent),
       child: child,
     );
+  }
+
+  Widget _buildInnerEdgeOfForAprilFool(int i, {TextStyle style}) {
+    switch (i) {
+      case 0:
+        return Icon(
+          Icons.adb,
+          color: style.color,
+          size: style.fontSize,
+        );
+      case 3:
+        return Icon(
+          Icons.filter_3,
+          color: style.color,
+          size: style.fontSize,
+        );
+      case 6:
+        return Icon(
+          Icons.filter_6,
+          color: style.color,
+          size: style.fontSize,
+        );
+      case 9:
+        return Icon(
+          Icons.filter_9,
+          color: style.color,
+          size: style.fontSize,
+        );
+      default:
+        return Icon(
+          Icons.error_outline,
+          color: style.color,
+          size: style.fontSize,
+        );
+    }
   }
 }
 
