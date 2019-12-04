@@ -149,7 +149,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           vsync: this,
           duration: widget.is24Format
               ? const Duration(hours: 24)
-              : Duration(hours: 12),
+              : const Duration(hours: 12),
         )
           ..forward(
             from: ofHours,
