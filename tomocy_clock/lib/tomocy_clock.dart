@@ -366,7 +366,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 enum RotatingAnimationControllerName { seconds, minutes, hours }
 
 class CircleWithInnerEdges extends StatelessWidget {
-  CircleWithInnerEdges(
+  const CircleWithInnerEdges(
       {this.radius,
       this.color,
       this.center,
