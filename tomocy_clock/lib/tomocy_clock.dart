@@ -90,7 +90,7 @@ class ClockThemeData {
 }
 
 class Clock extends StatefulWidget {
-  Clock({Key key, this.is24Format}) : super(key: key);
+  Clock({Key key, this.is24Format = false}) : super(key: key);
 
   final bool is24Format;
 
