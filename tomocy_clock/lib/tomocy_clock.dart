@@ -26,14 +26,16 @@ class ClockWithModel extends StatefulWidget {
 }
 
 class _ClockWithModelState extends State<ClockWithModel> {
+  static const List<DeviceOrientation> preferredOrientations = [
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ];
+
   @override
   void initState() {
     super.initState();
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+    SystemChrome.setPreferredOrientations(preferredOrientations);
   }
 
   @override
@@ -50,12 +52,7 @@ class _ClockWithModelState extends State<ClockWithModel> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    SystemChrome.setPreferredOrientations(preferredOrientations);
 
     super.dispose();
   }
