@@ -375,6 +375,58 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
 enum RotatingAnimationControllerName { seconds, minutes, hours }
 
+class ClockFace extends StatelessWidget {
+  const ClockFace({
+    @required this.turns,
+    @required this.radius,
+    this.color,
+    this.center,
+    this.indexes = const <Widget>[],
+  })  : assert(turns != null),
+        assert(radius != null);
+
+  final Animation<double> turns;
+  final double radius;
+  final Color color;
+  final Widget center;
+  final List<Widget> indexes;
+
+  @override
+  Widget build(BuildContext context) {
+    return _rotating(
+      turns: turns,
+      inReverse: true,
+      child: CircleWithInnerEdges(
+        radius: radius,
+        color: color,
+        center: _rotating(
+          turns: this.turns,
+          child: center,
+        ),
+        innerEdges: indexes
+            .map((index) => _rotating(
+                  turns: turns,
+                  child: index,
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  RotationTransition _rotating({
+    Animation<double> turns,
+    bool inReverse = false,
+    Widget child,
+  }) {
+    return RotationTransition(
+      turns: inReverse
+          ? Tween<double>(begin: 1, end: 0).animate(turns)
+          : Tween<double>(begin: 0, end: 1).animate(turns),
+      child: child,
+    );
+  }
+}
+
 class CircleWithInnerEdges extends StatelessWidget {
   const CircleWithInnerEdges({
     @required this.radius,
