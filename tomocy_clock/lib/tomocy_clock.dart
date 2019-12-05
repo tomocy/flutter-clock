@@ -91,7 +91,10 @@ class ClockThemeData {
 }
 
 class Clock extends StatefulWidget {
-  Clock({Key key, this.is24Format = false}) : super(key: key);
+  Clock({
+    Key key,
+    this.is24Format = false,
+  }) : super(key: key);
 
   final bool is24Format;
 
@@ -204,11 +207,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSecondsClock(BuildContext context,
-      {double radius = 0,
-      Color color = Colors.transparent,
-      Widget center,
-      TextStyle innerEdgeTextStyle}) {
+  Widget _buildSecondsClock(
+    BuildContext context, {
+    double radius = 0,
+    Color color = Colors.transparent,
+    Widget center,
+    TextStyle innerEdgeTextStyle,
+  }) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.seconds],
       inReverse: true,
@@ -234,11 +239,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildMinutesClock(BuildContext context,
-      {double radius = 0,
-      Color color = Colors.transparent,
-      Widget center,
-      TextStyle innerEdgeTextStyle}) {
+  Widget _buildMinutesClock(
+    BuildContext context, {
+    double radius = 0,
+    Color color = Colors.transparent,
+    Widget center,
+    TextStyle innerEdgeTextStyle,
+  }) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.minutes],
       inReverse: true,
@@ -264,49 +271,51 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHoursClock(BuildContext context,
-      {double radius = 0,
-      Color color = Colors.transparent,
-      Widget center,
-      TextStyle innerEdgeTextStyle}) {
+  Widget _buildHoursClock(
+    BuildContext context, {
+    double radius = 0,
+    Color color = Colors.transparent,
+    Widget center,
+    TextStyle innerEdgeTextStyle,
+  }) {
     return _rotatingTransition(
       parent: _animationControllers[RotatingAnimationControllerName.hours],
       inReverse: true,
       child: CircleWithInnerEdges(
-          radius: radius,
-          color: color,
-          center: _rotatingTransition(
-            parent:
-                _animationControllers[RotatingAnimationControllerName.hours],
-            child: center,
-          ),
-          innerEdges: widget.is24Format
-              ? List<int>.generate(24, (i) => (i + 6) % 24)
-                  .map((i) => _rotatingTransition(
-                        parent: _animationControllers[
-                            RotatingAnimationControllerName.hours],
-                        child: Text(
-                          i % 3 == 0 ? '$i' : '・',
-                          style: innerEdgeTextStyle,
-                        ),
-                      ))
-                  .toList()
-              : List<int>.generate(12, (i) => (i + 3) % 12)
-                  .map((i) => _rotatingTransition(
-                        parent: _animationControllers[
-                            RotatingAnimationControllerName.hours],
-                        child: _dateTime.month == DateTime.april &&
-                                _dateTime.day == 1
-                            ? _buildInnerEdgeOfForAprilFool(
-                                i,
-                                style: innerEdgeTextStyle,
-                              )
-                            : Text(
-                                i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
-                                style: innerEdgeTextStyle,
-                              ),
-                      ))
-                  .toList()),
+        radius: radius,
+        color: color,
+        center: _rotatingTransition(
+          parent: _animationControllers[RotatingAnimationControllerName.hours],
+          child: center,
+        ),
+        innerEdges: widget.is24Format
+            ? List<int>.generate(24, (i) => (i + 6) % 24)
+                .map((i) => _rotatingTransition(
+                      parent: _animationControllers[
+                          RotatingAnimationControllerName.hours],
+                      child: Text(
+                        i % 3 == 0 ? '$i' : '・',
+                        style: innerEdgeTextStyle,
+                      ),
+                    ))
+                .toList()
+            : List<int>.generate(12, (i) => (i + 3) % 12)
+                .map((i) => _rotatingTransition(
+                      parent: _animationControllers[
+                          RotatingAnimationControllerName.hours],
+                      child: _dateTime.month == DateTime.april &&
+                              _dateTime.day == 1
+                          ? _buildInnerEdgeOfForAprilFool(
+                              i,
+                              style: innerEdgeTextStyle,
+                            )
+                          : Text(
+                              i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                              style: innerEdgeTextStyle,
+                            ),
+                    ))
+                .toList(),
+      ),
     );
   }
 
