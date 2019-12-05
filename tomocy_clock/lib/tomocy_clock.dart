@@ -259,7 +259,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           : List<int>.generate(12, (i) => (i + 3) % 12)
               .map(
                   (i) => _dateTime.month == DateTime.april && _dateTime.day == 1
-                      ? _buildInnerEdgeOfForAprilFool(
+                      ? _indexForAprilFool(
                           i,
                           style: indexStyle,
                         )
@@ -271,7 +271,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildInnerEdgeOfForAprilFool(int i, {TextStyle style}) {
+  Widget _indexForAprilFool(int i, {TextStyle style}) {
     switch (i) {
       case 0:
         return Icon(
