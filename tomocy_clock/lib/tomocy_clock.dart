@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vector_math/vector_math.dart' as vector_math;
 import 'package:flutter_clock_helper/model.dart';
 
 class ClockApp extends StatelessWidget {
@@ -408,7 +409,7 @@ class CircleWithInnerEdges extends StatelessWidget {
     double degree = 0;
 
     return innerEdges.map((innerEdge) {
-      final radian = degree * pi / 180;
+      final radian = vector_math.radians(degree);
       final x = radian.abs() != pi / 2 ? innerRadiusRatio * cos(radian) : 0.0;
       final y = radian.abs() != pi ? innerRadiusRatio * sin(radian) : 0.0;
       degree += base;
