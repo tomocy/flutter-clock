@@ -166,33 +166,39 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radius = MediaQuery.of(context).size.shortestSide * 0.9 / 2;
-
     return Scaffold(
       body: Center(
-        child: Stack(
-          alignment: AlignmentDirectional.topCenter,
-          children: <Widget>[
-            _secondsClockFace(
-              radius: radius,
-              center: _minutesClockFace(
-                radius: radius * 3 / 4,
-                center: _hoursClockFace(
-                  radius: radius / 2,
-                  indexStyle: 250 <= radius
-                      ? Theme.of(context).textTheme.display1
-                      : Theme.of(context).textTheme.headline,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final radius = constraints.maxHeight < constraints.maxWidth
+                ? constraints.maxHeight * 0.9 / 2
+                : constraints.maxWidth * 0.9 / 2;
+
+            return Stack(
+              alignment: AlignmentDirectional.topCenter,
+              children: <Widget>[
+                _secondsClockFace(
+                  radius: radius,
+                  center: _minutesClockFace(
+                    radius: radius * 3 / 4,
+                    center: _hoursClockFace(
+                      radius: radius / 2,
+                      indexStyle: 250 <= radius
+                          ? Theme.of(context).textTheme.display1
+                          : Theme.of(context).textTheme.headline,
+                    ),
+                    indexStyle: Theme.of(context).textTheme.subtitle,
+                  ),
+                  indexStyle: Theme.of(context).textTheme.caption,
                 ),
-                indexStyle: Theme.of(context).textTheme.subtitle,
-              ),
-              indexStyle: Theme.of(context).textTheme.caption,
-            ),
-            Container(
-              width: 2,
-              height: radius,
-              color: Theme.of(context).accentColor,
-            ),
-          ],
+                Container(
+                  width: 2,
+                  height: radius,
+                  color: Theme.of(context).accentColor,
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
