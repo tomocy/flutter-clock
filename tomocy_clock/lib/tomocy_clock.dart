@@ -104,8 +104,7 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
   DateTime _dateTime = DateTime.now();
-  Map<RotatingAnimationControllerName, AnimationController>
-      _animationControllers;
+  Map<ClockType, AnimationController> _animationControllers;
 
   @override
   void initState() {
@@ -131,9 +130,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ? (_dateTime.hour + ofMinutes) / 24
           : (_dateTime.hour % 12 + ofMinutes) / 12;
 
-      _animationControllers =
-          <RotatingAnimationControllerName, AnimationController>{
-        RotatingAnimationControllerName.seconds: AnimationController(
+      _animationControllers = <ClockType, AnimationController>{
+        ClockType.seconds: AnimationController(
           vsync: this,
           duration: const Duration(seconds: 60),
         )
@@ -141,7 +139,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             from: ofSeconds,
           )
           ..repeat(),
-        RotatingAnimationControllerName.minutes: AnimationController(
+        ClockType.minutes: AnimationController(
           vsync: this,
           duration: const Duration(minutes: 60),
         )
@@ -149,7 +147,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             from: ofMinutes,
           )
           ..repeat(),
-        RotatingAnimationControllerName.hours: AnimationController(
+        ClockType.hours: AnimationController(
           vsync: this,
           duration: widget.is24Format
               ? const Duration(hours: 24)
@@ -215,20 +213,18 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     TextStyle innerEdgeTextStyle,
   }) {
     return _rotatingTransition(
-      parent: _animationControllers[RotatingAnimationControllerName.seconds],
+      parent: _animationControllers[ClockType.seconds],
       inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
-          parent:
-              _animationControllers[RotatingAnimationControllerName.seconds],
+          parent: _animationControllers[ClockType.seconds],
           child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
-                  parent: _animationControllers[
-                      RotatingAnimationControllerName.seconds],
+                  parent: _animationControllers[ClockType.seconds],
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
                     style: innerEdgeTextStyle,
@@ -247,20 +243,18 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     TextStyle innerEdgeTextStyle,
   }) {
     return _rotatingTransition(
-      parent: _animationControllers[RotatingAnimationControllerName.minutes],
+      parent: _animationControllers[ClockType.minutes],
       inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
-          parent:
-              _animationControllers[RotatingAnimationControllerName.minutes],
+          parent: _animationControllers[ClockType.minutes],
           child: center,
         ),
         innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
             .map((i) => _rotatingTransition(
-                  parent: _animationControllers[
-                      RotatingAnimationControllerName.minutes],
+                  parent: _animationControllers[ClockType.minutes],
                   child: Text(
                     i % 3 == 0 ? '$i' : '・',
                     style: innerEdgeTextStyle,
@@ -279,20 +273,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     TextStyle innerEdgeTextStyle,
   }) {
     return _rotatingTransition(
-      parent: _animationControllers[RotatingAnimationControllerName.hours],
+      parent: _animationControllers[ClockType.hours],
       inReverse: true,
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
         center: _rotatingTransition(
-          parent: _animationControllers[RotatingAnimationControllerName.hours],
+          parent: _animationControllers[ClockType.hours],
           child: center,
         ),
         innerEdges: widget.is24Format
             ? List<int>.generate(24, (i) => (i + 6) % 24)
                 .map((i) => _rotatingTransition(
-                      parent: _animationControllers[
-                          RotatingAnimationControllerName.hours],
+                      parent: _animationControllers[ClockType.hours],
                       child: Text(
                         i % 3 == 0 ? '$i' : '・',
                         style: innerEdgeTextStyle,
@@ -301,8 +294,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 .toList()
             : List<int>.generate(12, (i) => (i + 3) % 12)
                 .map((i) => _rotatingTransition(
-                      parent: _animationControllers[
-                          RotatingAnimationControllerName.hours],
+                      parent: _animationControllers[ClockType.hours],
                       child: _dateTime.month == DateTime.april &&
                               _dateTime.day == 1
                           ? _buildInnerEdgeOfForAprilFool(
@@ -373,7 +365,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 }
 
-enum RotatingAnimationControllerName { seconds, minutes, hours }
+enum ClockType { seconds, minutes, hours }
 
 class ClockFace extends StatelessWidget {
   const ClockFace({
