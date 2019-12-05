@@ -104,7 +104,7 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
   DateTime _dateTime = DateTime.now();
-  Map<ClockType, AnimationController> _animationControllers;
+  Map<ClockType, AnimationController> _animationControllers = {};
 
   @override
   void initState() {
@@ -122,32 +122,30 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     }
   }
 
-  void _updateAnimationControllers() {
-    setState(() {
-      final ofSeconds = _dateTime.second / 60;
-      final ofMinutes = (_dateTime.minute + ofSeconds) / 60;
-      final ofHours = widget.is24Format
-          ? (_dateTime.hour + ofMinutes) / 24
-          : (_dateTime.hour % 12 + ofMinutes) / 12;
+  void _updateAnimationControllers() => setState(() {
+        final ofSeconds = _dateTime.second / 60;
+        final ofMinutes = (_dateTime.minute + ofSeconds) / 60;
+        final ofHours = widget.is24Format
+            ? (_dateTime.hour + ofMinutes) / 24
+            : (_dateTime.hour % 12 + ofMinutes) / 12;
 
-      _animationControllers = <ClockType, AnimationController>{
-        ClockType.seconds: AnimationController(
+        _animationControllers[ClockType.seconds] = AnimationController(
           vsync: this,
           duration: const Duration(seconds: 60),
         )
           ..forward(
             from: ofSeconds,
           )
-          ..repeat(),
-        ClockType.minutes: AnimationController(
+          ..repeat();
+        _animationControllers[ClockType.minutes] = AnimationController(
           vsync: this,
           duration: const Duration(minutes: 60),
         )
           ..forward(
             from: ofMinutes,
           )
-          ..repeat(),
-        ClockType.hours: AnimationController(
+          ..repeat();
+        _animationControllers[ClockType.hours] = AnimationController(
           vsync: this,
           duration: widget.is24Format
               ? const Duration(hours: 24)
@@ -156,10 +154,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           ..forward(
             from: ofHours,
           )
-          ..repeat(),
-      };
-    });
-  }
+          ..repeat();
+      });
 
   @override
   void dispose() {
