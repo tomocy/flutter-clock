@@ -177,22 +177,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         child: Stack(
           alignment: AlignmentDirectional.topCenter,
           children: <Widget>[
-            _buildSecondsClock(
-              context,
+            _secondsClockFace(
               radius: radius,
-              center: _buildMinutesClock(
-                context,
+              center: _minutesClockFace(
                 radius: radius * 3 / 4,
-                center: _buildHoursClock(
-                  context,
+                center: _hoursClockFace(
                   radius: radius / 2,
-                  innerEdgeTextStyle: 250 <= radius
+                  indexStyle: 250 <= radius
                       ? Theme.of(context).textTheme.display1
                       : Theme.of(context).textTheme.headline,
                 ),
-                innerEdgeTextStyle: Theme.of(context).textTheme.subtitle,
+                indexStyle: Theme.of(context).textTheme.subtitle,
               ),
-              innerEdgeTextStyle: Theme.of(context).textTheme.caption,
+              indexStyle: Theme.of(context).textTheme.caption,
             ),
             Container(
               width: 2,
@@ -205,127 +202,73 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSecondsClock(
-    BuildContext context, {
+  Widget _secondsClockFace({
     double radius = 0,
     Color color = Colors.transparent,
     Widget center,
-    TextStyle innerEdgeTextStyle,
+    TextStyle indexStyle,
   }) {
-    return _rotatingTransition(
-      parent: _animationControllers[ClockType.seconds],
-      inReverse: true,
-      child: CircleWithInnerEdges(
-        radius: radius,
-        color: color,
-        center: _rotatingTransition(
-          parent: _animationControllers[ClockType.seconds],
-          child: center,
-        ),
-        innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
-            .map((i) => _rotatingTransition(
-                  parent: _animationControllers[ClockType.seconds],
-                  child: Text(
+    return ClockFace(
+      turns: _animationControllers[ClockType.seconds],
+      radius: radius,
+      center: center,
+      indexes: List<int>.generate(60, (i) => (i + 15) % 60)
+          .map((i) => Text(
+                i % 3 == 0 ? '$i' : '・',
+                style: indexStyle,
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _minutesClockFace({
+    double radius = 0,
+    Color color = Colors.transparent,
+    Widget center,
+    TextStyle indexStyle,
+  }) {
+    return ClockFace(
+      turns: _animationControllers[ClockType.minutes],
+      radius: radius,
+      center: center,
+      indexes: List<int>.generate(60, (i) => (i + 15) % 60)
+          .map((i) => Text(
+                i % 3 == 0 ? '$i' : '・',
+                style: indexStyle,
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _hoursClockFace({
+    double radius = 0,
+    Color color = Colors.transparent,
+    Widget center,
+    TextStyle indexStyle,
+  }) {
+    return ClockFace(
+      turns: _animationControllers[ClockType.hours],
+      radius: radius,
+      center: center,
+      indexes: widget.is24Format
+          ? List<int>.generate(24, (i) => (i + 6) % 24)
+              .map((i) => Text(
                     i % 3 == 0 ? '$i' : '・',
-                    style: innerEdgeTextStyle,
-                  ),
-                ))
-            .toList(),
-      ),
-    );
-  }
-
-  Widget _buildMinutesClock(
-    BuildContext context, {
-    double radius = 0,
-    Color color = Colors.transparent,
-    Widget center,
-    TextStyle innerEdgeTextStyle,
-  }) {
-    return _rotatingTransition(
-      parent: _animationControllers[ClockType.minutes],
-      inReverse: true,
-      child: CircleWithInnerEdges(
-        radius: radius,
-        color: color,
-        center: _rotatingTransition(
-          parent: _animationControllers[ClockType.minutes],
-          child: center,
-        ),
-        innerEdges: List<int>.generate(60, (i) => (i + 15) % 60)
-            .map((i) => _rotatingTransition(
-                  parent: _animationControllers[ClockType.minutes],
-                  child: Text(
-                    i % 3 == 0 ? '$i' : '・',
-                    style: innerEdgeTextStyle,
-                  ),
-                ))
-            .toList(),
-      ),
-    );
-  }
-
-  Widget _buildHoursClock(
-    BuildContext context, {
-    double radius = 0,
-    Color color = Colors.transparent,
-    Widget center,
-    TextStyle innerEdgeTextStyle,
-  }) {
-    return _rotatingTransition(
-      parent: _animationControllers[ClockType.hours],
-      inReverse: true,
-      child: CircleWithInnerEdges(
-        radius: radius,
-        color: color,
-        center: _rotatingTransition(
-          parent: _animationControllers[ClockType.hours],
-          child: center,
-        ),
-        innerEdges: widget.is24Format
-            ? List<int>.generate(24, (i) => (i + 6) % 24)
-                .map((i) => _rotatingTransition(
-                      parent: _animationControllers[ClockType.hours],
-                      child: Text(
-                        i % 3 == 0 ? '$i' : '・',
-                        style: innerEdgeTextStyle,
-                      ),
-                    ))
-                .toList()
-            : List<int>.generate(12, (i) => (i + 3) % 12)
-                .map((i) => _rotatingTransition(
-                      parent: _animationControllers[ClockType.hours],
-                      child: _dateTime.month == DateTime.april &&
-                              _dateTime.day == 1
-                          ? _buildInnerEdgeOfForAprilFool(
-                              i,
-                              style: innerEdgeTextStyle,
-                            )
-                          : Text(
-                              i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
-                              style: innerEdgeTextStyle,
-                            ),
-                    ))
-                .toList(),
-      ),
-    );
-  }
-
-  RotationTransition _rotatingTransition(
-      {AnimationController parent, bool inReverse = false, Widget child}) {
-    final tween = !inReverse
-        ? Tween<double>(
-            begin: 0,
-            end: 1,
-          )
-        : Tween<double>(
-            begin: 1,
-            end: 0,
-          );
-
-    return RotationTransition(
-      turns: tween.animate(parent),
-      child: child,
+                    style: indexStyle,
+                  ))
+              .toList()
+          : List<int>.generate(12, (i) => (i + 3) % 12)
+              .map(
+                  (i) => _dateTime.month == DateTime.april && _dateTime.day == 1
+                      ? _buildInnerEdgeOfForAprilFool(
+                          i,
+                          style: indexStyle,
+                        )
+                      : Text(
+                          i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                          style: indexStyle,
+                        ))
+              .toList(),
     );
   }
 
@@ -392,7 +335,7 @@ class ClockFace extends StatelessWidget {
         radius: radius,
         color: color,
         center: _rotating(
-          turns: this.turns,
+          turns: turns,
           child: center,
         ),
         innerEdges: indexes
