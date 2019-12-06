@@ -17,7 +17,7 @@ class ClockApp extends StatelessWidget {
 }
 
 class ClockWithModel extends StatefulWidget {
-  ClockWithModel({
+  const ClockWithModel({
     Key key,
     this.model,
   }) : super(key: key);
