@@ -359,8 +359,14 @@ class ClockFace extends StatelessWidget {
   }) {
     return RotationTransition(
       turns: inReverse
-          ? Tween<double>(begin: 1, end: 0).animate(turns)
-          : Tween<double>(begin: 0, end: 1).animate(turns),
+          ? Tween<double>(
+              begin: 1,
+              end: 0,
+            ).animate(turns)
+          : Tween<double>(
+              begin: 0,
+              end: 1,
+            ).animate(turns),
       child: child,
     );
   }
