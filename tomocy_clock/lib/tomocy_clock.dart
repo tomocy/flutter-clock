@@ -17,9 +17,12 @@ class ClockApp extends StatelessWidget {
 }
 
 class ClockWithModel extends StatefulWidget {
-  ClockWithModel(this._model, {Key key}) : super(key: key);
+  ClockWithModel({
+    Key key,
+    this.model,
+  }) : super(key: key);
 
-  final ClockModel _model;
+  final ClockModel model;
 
   @override
   _ClockWithModelState createState() => _ClockWithModelState();
@@ -45,7 +48,7 @@ class _ClockWithModelState extends State<ClockWithModel> {
           ? ClockThemeData.light()
           : ClockThemeData.dark(),
       child: Clock(
-        is24Format: widget._model.is24HourFormat,
+        is24Format: widget.model.is24HourFormat,
       ),
     );
   }
