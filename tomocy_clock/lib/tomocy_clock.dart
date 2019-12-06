@@ -363,12 +363,14 @@ class ClockFace extends StatelessWidget {
 
 class CircleWithInnerEdges extends StatelessWidget {
   const CircleWithInnerEdges({
+    Key key,
     @required this.radius,
     this.color,
     this.center,
     this.innerRadiusRatio = 1,
     this.innerEdges = const <Widget>[],
-  }) : assert(radius != null);
+  })  : assert(radius != null),
+        super(key: key);
 
   final double radius;
   final Color color;
