@@ -11,7 +11,7 @@ class ClockApp extends StatelessWidget {
       title: 'tomocy clock',
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
-      home: Clock(),
+      home: const Clock(),
     );
   }
 }
