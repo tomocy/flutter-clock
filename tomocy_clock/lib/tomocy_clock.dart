@@ -56,6 +56,7 @@ class _ClockWithModelState extends State<ClockWithModel> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations(preferredOrientations);
+    widget.model.dispose();
 
     super.dispose();
   }
