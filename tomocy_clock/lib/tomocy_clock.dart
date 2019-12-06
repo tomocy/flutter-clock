@@ -311,13 +311,15 @@ enum ClockType { seconds, minutes, hours }
 
 class ClockFace extends StatelessWidget {
   const ClockFace({
+    Key key,
     @required this.turns,
     @required this.radius,
     this.color,
     this.center,
     this.indexes = const <Widget>[],
   })  : assert(turns != null),
-        assert(radius != null);
+        assert(radius != null),
+        super(key: key);
 
   final Animation<double> turns;
   final double radius;
