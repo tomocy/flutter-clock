@@ -112,11 +112,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     _updateTurnsControllers();
   }
 
+  @override
+  void didUpdateWidget(Clock old) {
+    super.didUpdateWidget(old);
+    if (widget.is24Format != old.is24Format) _updateTurnsControllers();
+  }
+
   void _updateTurnsControllers() {
     final now = DateTime.now();
     final fromSeconds = now.second / 60;
     final fromMinutes = (now.minute + fromSeconds) / 60;
-    final fromHours = (now.hour % 12 + fromMinutes) / 12;
+    final fromHours = widget.is24Format
+        ? (now.hour + fromMinutes) / 24
+        : (now.hour % 12 + fromMinutes) / 12;
 
     _turnsControllers[ClockType.seconds] = AnimationController(
       vsync: this,
@@ -132,7 +140,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       ..repeat();
     _turnsControllers[ClockType.hours] = AnimationController(
       vsync: this,
-      duration: const Duration(hours: 12),
+      duration: widget.is24Format
+          ? const Duration(hours: 24)
+          : const Duration(hours: 12),
     )
       ..forward(from: fromHours)
       ..repeat();
@@ -140,20 +150,26 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radius = 200.0;
-
     return Center(
-      child: _secondsClockFace(
-        radius: radius,
-        center: _minutesClockFace(
-          radius: radius * 3 / 4,
-          center: _hoursClockFace(
-            radius: radius / 2,
-            indexStyle: Theme.of(context).textTheme.title,
-          ),
-          indexStyle: Theme.of(context).textTheme.subtitle,
-        ),
-        indexStyle: Theme.of(context).textTheme.caption,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final radius = constraints.maxHeight < constraints.maxWidth
+              ? constraints.maxHeight * 0.9 / 2
+              : constraints.maxWidth * 0.9 / 2;
+
+          return _secondsClockFace(
+            radius: radius,
+            center: _minutesClockFace(
+              radius: radius * 3 / 4,
+              center: _hoursClockFace(
+                radius: radius / 2,
+                indexStyle: Theme.of(context).textTheme.title,
+              ),
+              indexStyle: Theme.of(context).textTheme.subtitle,
+            ),
+            indexStyle: Theme.of(context).textTheme.caption,
+          );
+        },
       ),
     );
   }
@@ -202,17 +218,19 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     Widget center,
     TextStyle indexStyle,
   }) {
+    final indexes = widget.is24Format
+        ? List<int>.generate(24, (i) => (i + 6) % 24)
+        : List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12);
     return ClockFace(
       turns: _turnsControllers[ClockType.hours],
       radius: radius,
       center: center,
-      indexes:
-          List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12)
-              .map((i) => Text(
-                    i % 3 == 0 ? '$i' : '・',
-                    style: indexStyle,
-                  ))
-              .toList(),
+      indexes: indexes
+          .map((i) => Text(
+                i % 3 == 0 ? '$i' : '・',
+                style: indexStyle,
+              ))
+          .toList(),
     );
   }
 
