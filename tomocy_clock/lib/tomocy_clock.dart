@@ -144,36 +144,38 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final radius = constraints.maxHeight < constraints.maxWidth
-              ? constraints.maxHeight * 0.9 / 2
-              : constraints.maxWidth * 0.9 / 2;
+    return Scaffold(
+      body: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final radius = constraints.maxHeight < constraints.maxWidth
+                ? constraints.maxHeight * 0.9 / 2
+                : constraints.maxWidth * 0.9 / 2;
 
-          return Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              _secondsClockFace(
-                radius: radius,
-                center: _minutesClockFace(
-                  radius: radius * 3 / 4,
-                  center: _hoursClockFace(
-                    radius: radius / 2,
-                    indexStyle: Theme.of(context).textTheme.title,
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                _secondsClockFace(
+                  radius: radius,
+                  center: _minutesClockFace(
+                    radius: radius * 3 / 4,
+                    center: _hoursClockFace(
+                      radius: radius / 2,
+                      indexStyle: Theme.of(context).textTheme.title,
+                    ),
+                    indexStyle: Theme.of(context).textTheme.subtitle,
                   ),
-                  indexStyle: Theme.of(context).textTheme.subtitle,
+                  indexStyle: Theme.of(context).textTheme.caption,
                 ),
-                indexStyle: Theme.of(context).textTheme.caption,
-              ),
-              Container(
-                width: 2,
-                height: radius,
-                color: Theme.of(context).accentColor,
-              ),
-            ],
-          );
-        },
+                Container(
+                  width: 2,
+                  height: radius,
+                  color: Theme.of(context).accentColor,
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
