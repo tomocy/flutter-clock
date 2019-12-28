@@ -203,12 +203,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       turns: _turnsControllers[ClockType.seconds],
       radius: radius,
       center: center,
-      indexes: List<int>.generate(60, (i) => (i + 15) % 60)
-          .map((i) => Text(
-                i % 3 == 0 ? '$i' : '・',
-                style: indexStyle,
-              ))
-          .toList(),
+      indexes: _generateIndexes(
+        60,
+        replacer: (i) => Text(
+          i % 3 == 0 ? '$i' : '・',
+          style: indexStyle,
+        ),
+      ),
     );
   }
 
@@ -222,12 +223,13 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       turns: _turnsControllers[ClockType.minutes],
       radius: radius,
       center: center,
-      indexes: List<int>.generate(60, (i) => (i + 15) % 60)
-          .map((i) => Text(
-                i % 3 == 0 ? '$i' : '・',
-                style: indexStyle,
-              ))
-          .toList(),
+      indexes: _generateIndexes(
+        60,
+        replacer: (i) => Text(
+          i % 3 == 0 ? '$i' : '・',
+          style: indexStyle,
+        ),
+      ),
     );
   }
 
@@ -237,21 +239,35 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
     Widget center,
     TextStyle indexStyle,
   }) {
-    final indexes = widget.is24Format
-        ? List<int>.generate(24, (i) => (i + 6) % 24)
-        : List<int>.generate(12, (i) => (i + 3) % 12 != 0 ? (i + 3) % 12 : 12);
     return ClockFace(
       turns: _turnsControllers[ClockType.hours],
       radius: radius,
       center: center,
-      indexes: indexes
-          .map((i) => Text(
+      indexes: widget.is24Format
+          ? _generateIndexes(
+              24,
+              replacer: (i) => Text(
                 i % 3 == 0 ? '$i' : '・',
                 style: indexStyle,
-              ))
-          .toList(),
+              ),
+            )
+          : _generateIndexes(
+              12,
+              replacer: (i) => Text(
+                i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                style: indexStyle,
+              ),
+            ),
     );
   }
+
+  List<Widget> _generateIndexes(
+    int length, {
+    Widget Function(int) replacer,
+  }) =>
+      List<int>.generate(length, (i) => (i + length ~/ 4) % length)
+          .map((i) => replacer(i))
+          .toList();
 
   @override
   void dispose() {
