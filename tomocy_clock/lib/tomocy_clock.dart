@@ -67,10 +67,7 @@ class ClockThemeData {
         brightness: Brightness.light,
         accentColor: Colors.red,
         textTheme: TextTheme(
-          display1: TextStyle(
-            color: Colors.black,
-          ),
-          headline: TextStyle(
+          title: TextStyle(
             color: Colors.black,
           ),
         ),
@@ -81,10 +78,7 @@ class ClockThemeData {
         canvasColor: Colors.black,
         accentColor: Colors.red,
         textTheme: TextTheme(
-          display1: TextStyle(
-            color: Colors.white,
-          ),
-          headline: TextStyle(
+          title: TextStyle(
             color: Colors.white,
           ),
         ),
