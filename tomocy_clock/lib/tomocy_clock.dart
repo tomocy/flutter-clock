@@ -98,6 +98,7 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
+  DateTime _displayedDateTime = DateTime.now();
   Map<ClockType, AnimationController> _turnsControllers = {};
 
   @override
@@ -109,8 +110,10 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(Clock old) {
     super.didUpdateWidget(old);
-    if (widget.is24Format != old.is24Format)
+    if (widget.is24Format != old.is24Format) {
+      _displayedDateTime = DateTime.now();
       _updateTurnsControllers(targets: [ClockType.hours]);
+    }
   }
 
   void _updateTurnsControllers({
@@ -120,12 +123,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       ClockType.hours
     ],
   }) {
-    final now = DateTime.now();
-    final fromSeconds = now.second / 60;
-    final fromMinutes = (now.minute + fromSeconds) / 60;
+    final fromSeconds = _displayedDateTime.second / 60;
+    final fromMinutes = (_displayedDateTime.minute + fromSeconds) / 60;
     final fromHours = widget.is24Format
-        ? (now.hour + fromMinutes) / 24
-        : (now.hour % 12 + fromMinutes) / 12;
+        ? (_displayedDateTime.hour + fromMinutes) / 24
+        : (_displayedDateTime.hour % 12 + fromMinutes) / 12;
 
     if (targets.contains(ClockType.seconds)) {
       _turnsControllers[ClockType.seconds] = AnimationController(
