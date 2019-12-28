@@ -255,10 +255,11 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
             )
           : _generateIndexes(
               12,
-              replacer: (i) => Text(
-                i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
-                style: indexStyle,
-              ),
+              replacer: _hoursIndexSpecialReplacer(indexStyle) ??
+                  (i) => Text(
+                        i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
+                        style: indexStyle,
+                      ),
             ),
     );
   }
@@ -270,6 +271,46 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       List<int>.generate(length, (i) => (i + length ~/ 4) % length)
           .map((i) => replacer(i))
           .toList();
+
+  Widget Function(int) _hoursIndexSpecialReplacer(TextStyle style) {
+    if (_displayedDateTime.month != 4 && _displayedDateTime.day != 1)
+      return null;
+
+    return (i) {
+      switch (i) {
+        case 0:
+          return Icon(
+            Icons.adb,
+            color: style.color,
+            size: style.fontSize,
+          );
+        case 3:
+          return Icon(
+            Icons.filter_3,
+            color: style.color,
+            size: style.fontSize,
+          );
+        case 6:
+          return Icon(
+            Icons.filter_6,
+            color: style.color,
+            size: style.fontSize,
+          );
+        case 9:
+          return Icon(
+            Icons.filter_9,
+            color: style.color,
+            size: style.fontSize,
+          );
+        default:
+          return Icon(
+            Icons.error_outline,
+            color: style.color,
+            size: style.fontSize,
+          );
+      }
+    };
+  }
 
   @override
   void dispose() {
