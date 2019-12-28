@@ -203,7 +203,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       center: center,
       indexes: _generateIndexes(
         60,
-        replacer: (i) => Text(
+        (i) => Text(
           i % 3 == 0 ? '$i' : '・',
           style: indexStyle,
         ),
@@ -223,7 +223,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       center: center,
       indexes: _generateIndexes(
         60,
-        replacer: (i) => Text(
+        (i) => Text(
           i % 3 == 0 ? '$i' : '・',
           style: indexStyle,
         ),
@@ -244,14 +244,14 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
       indexes: widget.is24Format
           ? _generateIndexes(
               24,
-              replacer: (i) => Text(
+              (i) => Text(
                 i % 3 == 0 ? '$i' : '・',
                 style: indexStyle,
               ),
             )
           : _generateIndexes(
               12,
-              replacer: _hoursIndexSpecialReplacer(indexStyle) ??
+              _hoursIndexSpecialReplacer(indexStyle) ??
                   (i) => Text(
                         i % 3 == 0 ? i == 0 ? '12' : '$i' : '・',
                         style: indexStyle,
@@ -261,9 +261,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   }
 
   List<Widget> _generateIndexes(
-    int length, {
+    int length,
     Widget Function(int) replacer,
-  }) =>
+  ) =>
       List<int>.generate(length, (i) => (i + length ~/ 4) % length)
           .map((i) => replacer(i))
           .toList();
