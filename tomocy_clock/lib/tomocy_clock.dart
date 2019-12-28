@@ -109,10 +109,17 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   @override
   void didUpdateWidget(Clock old) {
     super.didUpdateWidget(old);
-    if (widget.is24Format != old.is24Format) _updateTurnsControllers();
+    if (widget.is24Format != old.is24Format)
+      _updateTurnsControllers(targets: [ClockType.hours]);
   }
 
-  void _updateTurnsControllers() {
+  void _updateTurnsControllers({
+    List<ClockType> targets = const [
+      ClockType.seconds,
+      ClockType.minutes,
+      ClockType.hours
+    ],
+  }) {
     final now = DateTime.now();
     final fromSeconds = now.second / 60;
     final fromMinutes = (now.minute + fromSeconds) / 60;
@@ -120,26 +127,32 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
         ? (now.hour + fromMinutes) / 24
         : (now.hour % 12 + fromMinutes) / 12;
 
-    _turnsControllers[ClockType.seconds] = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 60),
-    )
-      ..forward(from: fromSeconds)
-      ..repeat();
-    _turnsControllers[ClockType.minutes] = AnimationController(
-      vsync: this,
-      duration: const Duration(minutes: 60),
-    )
-      ..forward(from: fromMinutes)
-      ..repeat();
-    _turnsControllers[ClockType.hours] = AnimationController(
-      vsync: this,
-      duration: widget.is24Format
-          ? const Duration(hours: 24)
-          : const Duration(hours: 12),
-    )
-      ..forward(from: fromHours)
-      ..repeat();
+    if (targets.contains(ClockType.seconds)) {
+      _turnsControllers[ClockType.seconds] = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 60),
+      )
+        ..forward(from: fromSeconds)
+        ..repeat();
+    }
+    if (targets.contains(ClockType.minutes)) {
+      _turnsControllers[ClockType.minutes] = AnimationController(
+        vsync: this,
+        duration: const Duration(minutes: 60),
+      )
+        ..forward(from: fromMinutes)
+        ..repeat();
+    }
+    if (targets.contains(ClockType.hours)) {
+      _turnsControllers[ClockType.hours] = AnimationController(
+        vsync: this,
+        duration: widget.is24Format
+            ? const Duration(hours: 24)
+            : const Duration(hours: 12),
+      )
+        ..forward(from: fromHours)
+        ..repeat();
+    }
   }
 
   @override
