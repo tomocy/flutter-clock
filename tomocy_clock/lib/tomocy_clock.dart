@@ -37,7 +37,6 @@ class _ClockWithModelState extends State<ClockWithModel> {
   @override
   void initState() {
     super.initState();
-
     SystemChrome.setPreferredOrientations(preferredOrientations);
   }
 
@@ -47,9 +46,7 @@ class _ClockWithModelState extends State<ClockWithModel> {
       data: Theme.of(context).brightness == Brightness.light
           ? ClockThemeData.light()
           : ClockThemeData.dark(),
-      child: Clock(
-        is24Format: widget.model.is24HourFormat,
-      ),
+      child: Clock(is24Format: widget.model.is24HourFormat),
     );
   }
 
@@ -57,7 +54,6 @@ class _ClockWithModelState extends State<ClockWithModel> {
   void dispose() {
     SystemChrome.setPreferredOrientations(preferredOrientations);
     widget.model.dispose();
-
     super.dispose();
   }
 }
@@ -98,7 +94,7 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
-  DateTime _displayedDateTime = DateTime(2019, 4, 1);
+  DateTime _displayedDateTime = DateTime.now();
   Map<ClockType, AnimationController> _turnsControllers = {};
 
   @override
@@ -111,7 +107,7 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   void didUpdateWidget(Clock old) {
     super.didUpdateWidget(old);
     if (widget.is24Format != old.is24Format) {
-      _displayedDateTime = DateTime(2019, 4, 1);
+      _displayedDateTime = DateTime.now();
       _updateTurnsControllers(targets: [ClockType.hours]);
     }
   }
