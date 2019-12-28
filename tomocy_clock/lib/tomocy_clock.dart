@@ -103,16 +103,45 @@ class Clock extends StatefulWidget {
   _ClockState createState() => _ClockState();
 }
 
-class _ClockState extends State<Clock> {
-  final Map<ClockType, double> _angles = {
-    ClockType.seconds: 45,
-    ClockType.minutes: 15,
-    ClockType.hours: 10,
-  };
+class _ClockState extends State<Clock> with TickerProviderStateMixin {
+  Map<ClockType, AnimationController> _turnsControllers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTurnsControllers();
+  }
+
+  void _updateTurnsControllers() {
+    final now = DateTime.now();
+    final fromSeconds = now.second / 60;
+    final fromMinutes = (now.minute + fromSeconds) / 60;
+    final fromHours = (now.hour % 12 + fromMinutes) / 12;
+
+    _turnsControllers[ClockType.seconds] = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 60),
+    )
+      ..forward(from: fromSeconds)
+      ..repeat();
+    _turnsControllers[ClockType.minutes] = AnimationController(
+      vsync: this,
+      duration: const Duration(minutes: 60),
+    )
+      ..forward(from: fromMinutes)
+      ..repeat();
+    _turnsControllers[ClockType.hours] = AnimationController(
+      vsync: this,
+      duration: const Duration(hours: 12),
+    )
+      ..forward(from: fromHours)
+      ..repeat();
+  }
 
   @override
   Widget build(BuildContext context) {
     final radius = 200.0;
+
     return Center(
       child: _secondsClockFace(
         radius: radius,
@@ -136,7 +165,7 @@ class _ClockState extends State<Clock> {
     TextStyle indexStyle,
   }) {
     return ClockFace(
-      angle: _angles[ClockType.seconds],
+      turns: _turnsControllers[ClockType.seconds],
       radius: radius,
       center: center,
       indexes: List<int>.generate(60, (i) => (i + 15) % 60)
@@ -155,7 +184,7 @@ class _ClockState extends State<Clock> {
     TextStyle indexStyle,
   }) {
     return ClockFace(
-      angle: _angles[ClockType.minutes],
+      turns: _turnsControllers[ClockType.minutes],
       radius: radius,
       center: center,
       indexes: List<int>.generate(60, (i) => (i + 15) % 60)
@@ -174,7 +203,7 @@ class _ClockState extends State<Clock> {
     TextStyle indexStyle,
   }) {
     return ClockFace(
-      angle: _angles[ClockType.hours],
+      turns: _turnsControllers[ClockType.hours],
       radius: radius,
       center: center,
       indexes:
@@ -186,6 +215,12 @@ class _ClockState extends State<Clock> {
               .toList(),
     );
   }
+
+  @override
+  void dispose() {
+    _turnsControllers.forEach((type, controller) => controller.dispose());
+    super.dispose();
+  }
 }
 
 enum ClockType { seconds, minutes, hours }
@@ -193,16 +228,16 @@ enum ClockType { seconds, minutes, hours }
 class ClockFace extends StatelessWidget {
   const ClockFace({
     Key key,
-    @required this.angle,
+    @required this.turns,
     @required this.radius,
     this.color,
     this.center,
     this.indexes = const <Widget>[],
-  })  : assert(angle != null),
+  })  : assert(turns != null),
         assert(radius != null),
         super(key: key);
 
-  final double angle;
+  final Animation<double> turns;
   final double radius;
   final Color color;
   final Widget center;
@@ -210,19 +245,19 @@ class ClockFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: angle,
+    return RotationTransition(
+      turns: ReverseAnimation(turns),
       child: CircleWithInnerEdges(
         radius: radius,
         color: color,
-        center: Transform.rotate(
-          angle: -angle,
+        center: RotationTransition(
+          turns: turns,
           child: center,
         ),
         innerEdges: indexes
             .map(
-              (index) => Transform.rotate(
-                angle: -angle,
+              (index) => RotationTransition(
+                turns: turns,
                 child: index,
               ),
             )
