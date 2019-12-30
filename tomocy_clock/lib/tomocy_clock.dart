@@ -13,7 +13,15 @@ class ClockApp extends StatelessWidget {
       title: 'tomocy clock',
       theme: ClockThemeData.light(),
       darkTheme: ClockThemeData.dark(),
-      home: const Clock(),
+      home: LayoutBuilder(
+        builder: (context, constraints) {
+          final radius = constraints.maxHeight < constraints.maxWidth
+              ? constraints.maxHeight * 0.9 / 2
+              : constraints.maxWidth * 0.9 / 2;
+
+          return Clock(radius: radius);
+        },
+      ),
     );
   }
 }
@@ -48,7 +56,18 @@ class _ClockWithModelState extends State<ClockWithModel> {
       data: Theme.of(context).brightness == Brightness.light
           ? ClockThemeData.light()
           : ClockThemeData.dark(),
-      child: Clock(is24Format: widget.model.is24HourFormat),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final radius = constraints.maxHeight < constraints.maxWidth
+              ? constraints.maxHeight * 0.9 / 2
+              : constraints.maxWidth * 0.9 / 2;
+
+          return Clock(
+            radius: radius,
+            is24Format: widget.model.is24HourFormat,
+          );
+        },
+      ),
     );
   }
 
@@ -86,9 +105,11 @@ class ClockThemeData {
 class Clock extends StatefulWidget {
   const Clock({
     Key key,
+    @required this.radius,
     this.is24Format = false,
   }) : super(key: key);
 
+  final double radius;
   final bool is24Format;
 
   @override
@@ -159,35 +180,27 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final radius = constraints.maxHeight < constraints.maxWidth
-                ? constraints.maxHeight * 0.9 / 2
-                : constraints.maxWidth * 0.9 / 2;
-
-            return Stack(
-              alignment: Alignment.topCenter,
-              children: <Widget>[
-                _secondsClockFace(
-                  radius: radius,
-                  center: _minutesClockFace(
-                    radius: radius * 3 / 4,
-                    center: _hoursClockFace(
-                      radius: radius / 2,
-                      indexStyle: Theme.of(context).textTheme.title,
-                    ),
-                    indexStyle: Theme.of(context).textTheme.subtitle,
-                  ),
-                  indexStyle: Theme.of(context).textTheme.caption,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            _secondsClockFace(
+              radius: widget.radius,
+              center: _minutesClockFace(
+                radius: widget.radius * 3 / 4,
+                center: _hoursClockFace(
+                  radius: widget.radius / 2,
+                  indexStyle: Theme.of(context).textTheme.title,
                 ),
-                Container(
-                  width: 2,
-                  height: radius,
-                  color: Theme.of(context).accentColor,
-                ),
-              ],
-            );
-          },
+                indexStyle: Theme.of(context).textTheme.subtitle,
+              ),
+              indexStyle: Theme.of(context).textTheme.caption,
+            ),
+            Container(
+              width: 2,
+              height: widget.radius,
+              color: Theme.of(context).accentColor,
+            ),
+          ],
         ),
       ),
     );
