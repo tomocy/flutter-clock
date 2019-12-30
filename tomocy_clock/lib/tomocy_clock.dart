@@ -5,6 +5,8 @@ import 'package:vector_math/vector_math.dart' as vector_math;
 import 'package:flutter_clock_helper/model.dart';
 
 class ClockApp extends StatelessWidget {
+  const ClockApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
