@@ -117,8 +117,8 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> with TickerProviderStateMixin {
+  final Map<ClockType, AnimationController> _turnsControllers = {};
   DateTime _displayedDateTime = DateTime.now();
-  Map<ClockType, AnimationController> _turnsControllers = {};
 
   @override
   void initState() {
@@ -284,8 +284,9 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
           .toList();
 
   Widget Function(int) _hoursIndexSpecialReplacer(TextStyle style) {
-    if (_displayedDateTime.month != 4 || _displayedDateTime.day != 1)
+    if (_displayedDateTime.month != 4 || _displayedDateTime.day != 1) {
       return null;
+    }
 
     return (i) {
       switch (i) {
@@ -393,14 +394,14 @@ class CircleWithInnerEdges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = center != null
+    final children = (center != null
         ? <Widget>[
             Align(
               child: center,
             ),
           ]
-        : <Widget>[];
-    children.addAll(_roundlyPositionedInnerEdges());
+        : <Widget>[])
+      ..addAll(_roundlyPositionedInnerEdges());
 
     return Container(
       width: radius * 2,
@@ -417,7 +418,7 @@ class CircleWithInnerEdges extends StatelessWidget {
 
   List<Widget> _roundlyPositionedInnerEdges() {
     final base = 360 / innerEdges.length;
-    double degree = 0;
+    var degree = 0.0;
 
     return innerEdges.map((innerEdge) {
       final radian = vector_math.radians(degree);
